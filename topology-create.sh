@@ -51,8 +51,16 @@ if [[ -z $(neutron physical-attachment-point-list | grep pap1) ]]; then
 else
   echo "SKIPPING: pap1 already exists!"
 fi
-if [[ -z $(glance image-list | grep Cirros) ]]; then
-  glance image-create --name Cirros --disk-format=qcow2 --container-format=bare --is-public=True --copy-from "http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img"
+
+if [[ ! -f ~/cirros-0.3.4-x86_64-disk.img ]]; then
+  wget ~/ http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
+
+if [[ -z $(glance image-list | grep cirros) ]]; then
+  glance image-create --name "cirros" \
+  --file ~/cirros-0.3.4-x86_64-disk.img \
+  --disk-format qcow2 --container-format bare \
+  --visibility public --progress
+  #glance image-create --name Cirros --disk-format=qcow2 --container-format=bare --is-public=True --copy-from "http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img"
 
 echo '     *********************************************'
 echo '     |         Sleeping for 7 seconds            |'
@@ -63,13 +71,13 @@ else
 fi
 
 if [[ -z $(nova list | grep vm1) ]]; then
-  nova boot --image Cirros --flavor 1 --nic net-id=$(neutron net-list | grep net1 |  awk '{print $2}' | grep -v id) vm1
+  nova boot --image cirros --flavor 1 --nic net-id=$(neutron net-list | grep net1 |  awk '{print $2}' | grep -v id) vm1
   sleep 3
 else
   echo "SKIPPING: vm1 already exists!"
 fi
 if [[ -z $(nova list | grep vm2) ]]; then
-  nova boot --image Cirros --flavor 1 --nic net-id=$(neutron net-list | grep net2 |  awk '{print $2}' | grep -v id) vm2
+  nova boot --image cirros --flavor 1 --nic net-id=$(neutron net-list | grep net2 |  awk '{print $2}' | grep -v id) vm2
 else
   echo "SKIPPING: vm2 already exists!"
 fi
