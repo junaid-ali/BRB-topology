@@ -8,7 +8,7 @@ set -e
 
 gateway_details() {
   mkdir -p ~/.brb/
-  cat > .brb/gateway_details <<DELIM__
+  cat > ~/.brb/gateway_details <<DELIM__
 gw_hostname=$gw_hostname
 gw_interface=$gw_interface
 ext_cidr=$ext_cidr
@@ -54,6 +54,7 @@ fi
 
 if [[ ! -f ~/cirros-0.3.4-x86_64-disk.img ]]; then
   wget ~/ http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
+fi
 
 if [[ -z $(glance image-list | grep cirros) ]]; then
   glance image-create --name "cirros" \
