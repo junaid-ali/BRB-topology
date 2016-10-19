@@ -53,7 +53,7 @@ else
 fi
 
 if [[ ! -f ~/cirros-0.3.4-x86_64-disk.img ]]; then
-  wget ~/ http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
+  wget http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img -P ~/
 fi
 
 if [[ -z $(glance image-list | grep cirros) ]]; then
